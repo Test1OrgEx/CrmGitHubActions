@@ -1,0 +1,29 @@
+name: Import to Higher environment
+
+on: 
+  workflow_dispatch: 
+  push:
+    branches: [ main ]
+  pull_request: 
+    branches: [ main ]
+    
+jobs:
+  import-to-qa:
+    runs-on: windows-latest
+    env:
+      RUNNER_DEBUG: 1
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        lfs: true
+
+    - name: Import solution as unmanaged to qa env
+      uses: microsoft/powerplatform-actions/import-solution@v0
+      with:
+        environment-url: 'https://org01faf79d.crm8.dynamics.com/'
+        user-name: 'srinivasm@xyzorg221.onmicrosoft.com'
+        password-secret: ${{ secrets.password }}
+        solution-file: out/exported/SalesInfo.zip
+        force-overwrite: true
+        publish-changes: true
